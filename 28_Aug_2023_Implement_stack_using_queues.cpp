@@ -1,3 +1,14 @@
+//driver code
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    
+}
+
+//TC : push O(1) pop() O(N)
+//SC : O(N) extra queue
 class MyStack {
 public:
     queue<int> q1;

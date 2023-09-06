@@ -10,7 +10,7 @@
  */
 class Solution {
 public:
-    //TC: O(N*K) SC: O(1)
+    //TC: O(N+K) SC: O(1)
     int getSize(ListNode* head)
     {
         ListNode* cur= head;

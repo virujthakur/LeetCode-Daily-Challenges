@@ -1,4 +1,5 @@
 class Solution:
+    
     # TC: O(N*M (N+M)) SC: O(1)
     def numSpecial(self, mat: List[List[int]]) -> int:
         m= len(mat)

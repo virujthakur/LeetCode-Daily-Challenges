@@ -29,4 +29,3 @@ class Solution:
         recur(0, False, False, -1, str(high), '')
         # print(res)
         return res
-                

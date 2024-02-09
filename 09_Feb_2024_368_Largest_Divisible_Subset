@@ -1,0 +1,39 @@
+class Solution:
+    # TC: O(N* N) SC: O(1)
+    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        nums.sort()
+        n = len(nums)
+        res= []
+        
+        for i in range(n):
+            j= i+1
+            k= i-1
+            
+            ansr = []
+            lcm = nums[i]
+            while j < n:
+                if nums[j]% lcm == 0:
+                    ansr.append(nums[j])
+                    lcm = ((nums[j]* lcm)// gcd(nums[j], lcm))
+                j+=1
+            # print(ans)
+                
+            ansl = []
+            k= i-1
+            g = nums[i]
+            while k >= 0:
+                if math.gcd(nums[k],g) == nums[k]:
+                    ansl.append(nums[k])
+                    g = nums[k]
+                k-=1
+            ansl.reverse()
+            
+            ans= ansl+ [nums[i]] + ansr
+            # print(ans)
+            
+            if len(res) < len(ans):
+                res= ans
+            
+            
+        return res
+                

@@ -1,0 +1,29 @@
+class Solution:
+    #TC: O(N) SC: O(N)
+    def minRemoveToMakeValid(self, s: str) -> str:
+        n= len(s)
+        inc= [True]* n
+        
+        st = deque()
+        for i in range(n):
+            c= s[i]
+            if c == ')':
+                if st and st[-1][0] == '(':
+                    st.pop()
+                else:
+                    inc[i]= False
+            elif c== '(':
+                st.append([c,i])
+                
+        while st:
+            x= st.pop()
+            inc[x[1]]= False
+            
+        ans= []
+        for i in range(n):
+            if inc[i]:
+                ans.append(s[i])
+                
+        return ''.join(ans)
+                
+        

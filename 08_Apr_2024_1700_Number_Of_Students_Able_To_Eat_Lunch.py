@@ -1,5 +1,5 @@
 class Solution:
-    #TC: O(N) SC: O(N)
+    #TC: O(N^2) SC: O(N) SIMULATION
     def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
         i,j = 0,0
         cnt = 0
@@ -17,4 +17,23 @@ class Solution:
             i+=1
             
         return len(sandwiches)- j
+    
+    
+    #TC: O(N) SC: O(1) COUNTING
+    def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
+        cnt0, cnt1 = 0,0
+        for s in students:
+            if s: cnt1+=1
+            else: cnt0+=1
+                
+        for s in sandwiches:
+            if s and cnt1:
+                cnt1-=1
+            elif not s and cnt0:
+                cnt0-=1
+            else:
+                break
+                
+        return cnt0+ cnt1
+        
         

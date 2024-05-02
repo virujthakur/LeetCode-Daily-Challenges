@@ -1,5 +1,5 @@
 class Solution:
-    #TC: O(N) SC: O(1)
+    #TC: O(N) SC: O(N)
     def findMaxK(self, nums: List[int]) -> int:
         ans = -1
         s= set()

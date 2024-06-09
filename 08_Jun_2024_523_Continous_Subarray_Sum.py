@@ -1,5 +1,5 @@
 class Solution:
-    #TC: O(N) SC: O(1)
+    #TC: O(N) SC: O(N)
     def checkSubarraySum(self, nums: List[int], k: int) -> bool:
         n= len(nums)
         f= defaultdict(int)

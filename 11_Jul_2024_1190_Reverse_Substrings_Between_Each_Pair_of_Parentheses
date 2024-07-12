@@ -1,0 +1,22 @@
+class Solution:
+    #TC: O(N^2) SC: O(N)
+    def reverseParentheses(self, s: str) -> str:
+        s= list(s)
+        st= deque()
+        
+        for i,c in enumerate(s):
+            if c== ')':
+                r = []
+                while st and st[-1] != '(':
+                    r.append(st.pop())
+                    
+                if st and st[-1]== '(':
+                    st.pop()
+                    
+                for d in r:
+                    st.append(d)
+                    
+            else:
+                st.append(c)
+                
+        return ''.join(st)

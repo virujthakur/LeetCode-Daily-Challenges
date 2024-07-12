@@ -1,0 +1,46 @@
+class Solution:
+    #TC: O(N) SC: O(N)
+    def maximumGain(self, s: str, x: int, y: int) -> int:
+        n= len(s)
+        
+        def solve(first, cost_first, second, cost_second):
+            
+            ans = 0
+            st = deque()
+            nonlocal s
+            
+            for i in range(n):
+                if st:
+                    temp= st[-1] + s[i]
+                    if temp== first:
+                        ans+= cost_first
+                        st.pop()
+                        continue
+                    
+                st.append(s[i])
+            
+            s= ''.join(st)
+            st= deque()
+            
+            for i in range(len(s)):
+                if st:
+                    temp= st[-1] + s[i]
+                    if temp==second:
+                        ans+= cost_second
+                        st.pop()
+                        continue
+                    
+                st.append(s[i])
+                    
+            return ans
+        
+        ans = 0
+        if x>y:
+            ans = solve('ab', x, 'ba', y)
+        else:
+            ans = solve('ba', y, 'ab', x)
+            
+        return ans
+        
+            
+                

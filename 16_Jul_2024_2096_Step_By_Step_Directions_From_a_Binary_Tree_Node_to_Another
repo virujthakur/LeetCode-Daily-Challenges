@@ -1,0 +1,115 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    #TC: O(N) SC: O(NLOGN)
+    def getDirections(self, root: Optional[TreeNode], startValue: int, destValue: int) -> str:
+        #shortest path startValue to LCA LCA -> destValue
+        #determine LCA using binary lifting
+        # U : startValue to LCA
+        # Trace Path: LCA to destValue
+        # return answer string
+        
+        def cntNodes(r):
+            if r is None:
+                return 0
+            return 1+ cntNodes(r.left)+ cntNodes(r.right)
+        
+        n = cntNodes(root)
+        
+        node = [None]* (n+1)
+        level = [0]* (n+1)
+        parent = [[0]* (32) for _ in range(n+1)]
+        
+        def dfs(r, lvl, par):
+            if r is None:
+                return
+            node[r.val] = r
+            level[r.val]= lvl
+            parent[r.val][0] = par
+            dfs(r.left, lvl+1, r.val)
+            dfs(r.right, lvl+1, r.val)
+            
+        dfs(root, 0, 0)
+        
+        for j in range(1, 32):
+            for i in range(1, n+1):
+                parent[i][j]= parent[parent[i][j-1]][j-1]
+        
+        ans = ''
+        def liftNode(node, levels, flag):
+            nonlocal ans
+            for i in range(32):
+                if (1<<i)& levels:
+                    node = parent[node][i]
+                    if flag:
+                        ans+= ('U'* (1<<i))
+                    # print(ans)
+               
+            # print(ans)
+            return node
+        
+        
+        def LCA(startValue, destValue):
+            
+            nonlocal ans
+            newStartValue = startValue
+            newDestValue= destValue
+            diff= abs(level[destValue]- level[startValue])
+            # print(diff)
+            
+            if level[startValue] > level[destValue]:
+                newStartValue = liftNode(startValue, diff, True)
+            else:
+                newDestValue = liftNode(destValue, diff, False)
+                
+            # print(newStartValue, newDestValue)
+            if newStartValue == newDestValue:
+                return newStartValue
+                
+            for i in range(31, -1, -1):
+                if parent[newStartValue][i] != parent[newDestValue][i]:
+                    ans+= ('U'* (1<<i))
+                    return LCA(parent[newStartValue][i], parent[newDestValue][i])
+                
+            ans+= 'U'
+            return parent[newStartValue][0]
+        
+        _lca = LCA(startValue, destValue)
+        # print(_lca, startValue, destValue)
+        # return ''
+        # print(ans)
+        
+        def make_path(src, dest, path):
+            nonlocal ans
+            
+            if src is None:
+                return
+            
+            if src.val == dest:
+                ans += ''.join(path)
+                return
+            
+            path.append('L')
+            make_path(src.left, dest, path)
+            path.pop()
+            path.append('R')
+            make_path(src.right, dest, path)
+            path.pop()
+            
+        
+        if _lca== startValue:
+            ans = ''
+        
+        make_path(node[_lca], destValue, [])
+        
+        return ans 
+            
+        
+        
+            
+            
+        

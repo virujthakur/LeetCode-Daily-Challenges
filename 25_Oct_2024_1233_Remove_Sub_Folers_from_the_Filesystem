@@ -1,0 +1,56 @@
+class Solution:
+    #TC: O(N) SC: O(1)
+    def removeSubfolders(self, folder: List[str]) -> List[str]:
+        graph = defaultdict(list)
+        edges = set()
+        rootNodes = set()
+        myFolders = set()
+        
+        for f in folder:
+            nodes = f.split('/')
+            rootNodes.add(nodes[1])
+            temp =[nodes[1],]
+            for i in range(2, len(nodes)):
+                edges.add((nodes[i-1], nodes[i]))
+                temp.append(nodes[i])
+                
+            myFolders.add(tuple(temp))
+                
+                
+        edges = list(edges)
+        
+        for u,v in edges:
+            graph[u].append(v)
+            
+        visited = set()
+        answer = []
+        path = []
+        
+        # print(graph)
+        # print(rootNodes)
+        
+        def dfs(src):
+            for nbr in graph[src]:
+                if nbr not in visited:
+                    visited.add(nbr)
+                    path.append(nbr)
+                    if tuple(path) in myFolders:
+                        answer.append(list(path))
+                        path.pop()
+                        continue
+                    dfs(nbr)
+                    path.pop()
+                    
+        for node in rootNodes:
+            path.append(node)
+            if tuple(path) in myFolders:
+                answer.append(list(path))
+                path.pop()
+                continue
+            dfs(node)
+            path.pop()
+            
+        for i, path in enumerate(answer):
+            answer[i] = '/' + '/'.join(path)
+            
+        return answer

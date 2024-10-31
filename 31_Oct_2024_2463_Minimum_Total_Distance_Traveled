@@ -1,0 +1,37 @@
+class Solution {
+public:
+    
+    long long solve(int i, int j, int limit, vector<int>& robot, vector<vector<int>>& factory,
+                    vector<vector<vector<long long>>>& dp)
+    {
+        int n= robot.size();
+        int m= factory.size();
+        //cout<<i<<" "<<j<<endl;
+        
+        if(i==n) return 0;
+        if(j==m) return 1e15;
+        
+        if(dp[i][j][limit]!=-1) return dp[i][j][limit];
+                
+        if(limit==0) return dp[i][j][limit]= (j+1) <= m-1 ? solve(i,j+1, factory[j+1][1], robot,factory, dp) : 1e15;
+        
+        
+        long long ans1=  abs(robot[i]- factory[j][0]) + solve(i+1,j,limit-1,robot,factory,dp);
+        long long ans2=  (j+1) <= m-1 ? solve(i,j+1,factory[j+1][1], robot, factory, dp): 1e15;
+        
+        return dp[i][j][limit]= min(ans1,ans2);
+    }
+    
+    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
+        
+        int n= robot.size();
+        int m= factory.size();
+        int limit = 101;
+        
+        sort(robot.begin(),robot.end());
+        sort(factory.begin(), factory.end());
+        
+        vector<vector<vector<long long>>> dp(n,vector<vector<long long>>(m,vector<long long>(limit,-1)));
+        return solve(0,0,factory[0][1],robot,factory,dp);
+    }
+};

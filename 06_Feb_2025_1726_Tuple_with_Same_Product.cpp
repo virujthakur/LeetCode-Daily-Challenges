@@ -1,6 +1,6 @@
 class Solution {
 public:
-    //TC: O(N) SC: O(N)
+    //TC: O(N^2) SC: O(N^2)
     int tupleSameProduct(vector<int>& nums) {
         int n= nums.size();
         unordered_map<int,int> f;

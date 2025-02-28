@@ -2,37 +2,74 @@ class Solution:
     #TC: O(N^2) SC: O(N^2)
     def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
         n, m = len(str1), len(str2)
-        dp = [[0] * (m + 1) for _ in range(n + 1)]
+        transitions = defaultdict(tuple)
 
-        for i in range(1, n + 1):
-            for j in range(1, m + 1):
-                if str1[i - 1] == str2[j - 1]:
-                    dp[i][j] = 1 + dp[i - 1][j - 1]
-                else:
-                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+        @cache
+        def LCS(i, j):
+            if i == n and j == m:
+                return 0
 
-        i, j = n, m
-        ans = []
+            if i==n:
+                ans = LCS(i, j+1)
+                transitions[(i,j+1)]= (i, j)
+                return ans
+            
+            if j==m:
+                ans = LCS(i+1, j)
+                transitions[(i+1, j)]= (i, j)
+                return ans
 
-        while i > 0 and j > 0:
-            if str1[i - 1] == str2[j - 1]:
-                ans.append(str1[i - 1])
-                i -= 1
-                j -= 1
-            elif dp[i - 1][j] >= dp[i][j - 1]:
-                ans.append(str1[i - 1])
-                i -= 1
+            ans = 0
+            if str1[i] == str2[j]:
+                ans = 1+ LCS(i+1, j+1)
+                transitions[(i,j)] =(i+1, j+1)
             else:
-                ans.append(str2[j - 1])
-                j -= 1
+                ans1 = LCS(i+1, j)
+                ans2 = LCS(i, j+1)
+                if ans1 >= ans2:
+                    transitions[(i,j)] = (i+1, j)
+                    ans = ans1
+                else:
+                    transitions[(i,j)] = (i, j+1)
+                    ans = ans2
+            return ans
 
-        while i > 0:
-            ans.append(str1[i - 1])
-            i -= 1
-        while j > 0:
-            ans.append(str2[j - 1])
-            j -= 1
+        LCS(0,0)
+        # print(transitions)
+        i,j = 0, 0
 
-        return "".join(reversed(ans))
+        isLCS1 = [False] * n
+        isLCS2 = [False] * m
+        while i<n and j<m:
+            # print(i, j)
+            if i< n and j< m and str1[i] == str2[j]:
+                isLCS1[i] = True
+                isLCS2[j] = True
+            
+            if transitions[(i,j)] == ():
+                break
+            i,j = transitions[i,j]
+
+
+        # print(isLCS1, isLCS2)
+        ans = ''
+        
+        i, j = 0, 0
+        while i<n or j<m:
+            while i<n and isLCS1[i]== False:
+                ans+= str1[i]
+                i+=1
+            while j<m and isLCS2[j]== False:
+                ans+= str2[j]
+                j+=1
+            
+            if i< n:
+                ans+= str1[i]
+            elif j<m:
+                ans+= str2[j]
+
+            i,j = i+1, j+1
+
+        return ans
 
 

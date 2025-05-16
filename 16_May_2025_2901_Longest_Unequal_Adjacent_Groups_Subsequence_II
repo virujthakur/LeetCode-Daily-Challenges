@@ -1,0 +1,26 @@
+class Solution:
+    def getWordsInLongestSubsequence(self, words: List[str], groups: List[int]) -> List[str]:
+        def hd(s1, s2):
+            return sum(a != b for a, b in zip(s1, s2))
+
+        @cache
+        def recur(idx: int, prev_idx: int) -> tuple[int, List[str]]:
+            if idx == len(words):
+                return 0, []
+
+            max_len, max_path = recur(idx + 1, prev_idx)
+
+            if prev_idx == -1 or (
+                groups[idx] != groups[prev_idx] and
+                len(words[idx]) == len(words[prev_idx]) and
+                hd(words[idx], words[prev_idx]) == 1
+            ):
+                next_len, next_path = recur(idx + 1, idx)
+                if next_len + 1 > max_len:
+                    max_len = next_len + 1
+                    max_path = [words[idx]] + next_path
+
+            return max_len, max_path
+
+        _, path = recur(0, -1)
+        return path
